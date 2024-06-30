@@ -2,6 +2,7 @@ package com.example.ToDoList_app.service;
 
 import com.example.ToDoList_app.entity.Priority;
 import com.example.ToDoList_app.entity.Task;
+import com.example.ToDoList_app.entity.User;
 import com.example.ToDoList_app.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,9 +34,8 @@ public class TaskService {
         });
     }
 
-    @PostConstruct
-    public void init() {
-        List<Task> taskList = (List<Task>) taskRepository.findAll();
+    public void init(User user) {
+        List<Task> taskList = (List<Task>) taskRepository.findByUserId(user.getId());
         tasks.addAll(taskList);
     }
 
@@ -46,13 +46,6 @@ public class TaskService {
 
     public List<Task> getAllTasks() {
         return new ArrayList<>(tasks);
-    }
-
-    public Task getTaskByID(int id) {
-        return tasks.stream()
-                .filter(t -> t.getId() == id)
-                .findFirst()
-                .orElse(null);
     }
 
     public void addTask(Task task) {

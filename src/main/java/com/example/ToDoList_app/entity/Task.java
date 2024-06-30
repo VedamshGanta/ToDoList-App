@@ -2,6 +2,8 @@ package com.example.ToDoList_app.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDate;
 
@@ -15,15 +17,19 @@ public class Task implements Comparable<Task> {
     private boolean isCompleted;
     private LocalDate dueDate;
     private Priority priority;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     // Constructor
-    public Task(int id, String title, String description, LocalDate dueDate, Priority priority) {
+    public Task(int id, String title, String description, LocalDate dueDate, Priority priority, User user) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.isCompleted = false;
         this.dueDate = dueDate;
         this.priority = priority;
+        this.user = user;
     }
 
     // No-argument constructor
@@ -78,18 +84,17 @@ public class Task implements Comparable<Task> {
         this.priority = priority;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     // Method to mark task as completed
     public void completeTask() {
         this.isCompleted = true;
-    }
-
-    // Method to display task details
-    public void displayTask() {
-        System.out.println("Title: " + title);
-        System.out.println("Description: " + description);
-        System.out.println("Due Date: " + dueDate);
-        System.out.println("Priority: " + priority);
-        System.out.println("Completed: " + (isCompleted ? "Yes" : "No"));
     }
 
     @Override
@@ -101,5 +106,4 @@ public class Task implements Comparable<Task> {
             return this.title.compareTo(other.title);
         }
     }
-
 }
