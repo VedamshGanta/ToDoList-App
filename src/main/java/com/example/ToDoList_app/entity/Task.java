@@ -1,33 +1,32 @@
 package com.example.ToDoList_app.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
-import java.time.LocalDate;
 
 @Entity
 public class Task implements Comparable<Task> {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
     private String description;
-    private boolean isCompleted;
-    private LocalDate dueDate;
+
+    @Enumerated(EnumType.STRING)
+    private State state;
+
     private Priority priority;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     // Constructor
-    public Task(int id, String title, String description, LocalDate dueDate, Priority priority, User user) {
+    public Task(int id, String title, String description, State state, Priority priority, User user) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.isCompleted = false;
-        this.dueDate = dueDate;
+        this.state = state;
         this.priority = priority;
         this.user = user;
     }
@@ -60,20 +59,12 @@ public class Task implements Comparable<Task> {
         this.description = description;
     }
 
-    public boolean isCompleted() {
-        return isCompleted;
+    public State getState() {
+        return state;
     }
 
-    public void setCompleted(boolean isCompleted) {
-        this.isCompleted = isCompleted;
-    }
-
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
+    public void setState(State state) {
+        this.state = state;
     }
 
     public Priority getPriority() {
@@ -92,9 +83,8 @@ public class Task implements Comparable<Task> {
         this.user = user;
     }
 
-    // Method to mark task as completed
-    public void completeTask() {
-        this.isCompleted = true;
+    public boolean isToBeCompletedToday() {
+        return state == State.TO_BE_COMPLETED_TODAY;
     }
 
     @Override
